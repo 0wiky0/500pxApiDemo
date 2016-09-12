@@ -1,22 +1,16 @@
-﻿# 相关知识
+# 相关知识
 - MVP : [MODEL VIEW PRESENTER (MVP) IN ANDROID][1] 
 - RxJava : [给 Android 开发者的 RxJava 详解](http://gank.io/post/560e15be2dca930e00da1083)
 - Retrofit : [官方文档](http://square.github.io/retrofit/)
 - 500px API ：[documentation](https://github.com/500px/api-documentation)
 
-# 使用一：MVP+RxJava+Retrofit的基本使用
+# 使用一：MVP+Retrofit的基本使用
 - 添加依赖
 ```
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:24.2.0'
-
-    //RxJava相关
-    compile 'io.reactivex:rxandroid:1.2.1'
-    // Because RxAndroid releases are few and far between, it is recommended you also
-    // explicitly depend on RxJava's latest version for bug fixes and new features.
-    compile 'io.reactivex:rxjava:1.1.6'
 
     //retrofit相关
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
@@ -98,6 +92,65 @@ public class MainViewPresenter implements IMainViewPresenter {
     }
 }
 
+```
+# 使用二：加入RxJava
+- 添加相关依赖
+```
+ dependencies {
+    ...
+    //RxJava相关
+    compile 'io.reactivex:rxandroid:1.2.1'
+// Because RxAndroid releases are few and far between, it is recommended you also
+// explicitly depend on RxJava's latest version for bug fixes and new features.
+    compile 'io.reactivex:rxjava:1.1.6'
+
+    //retrofit相关
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
+}
+
+```
+- 利用AS中的GsonFormat插件,生成get/photos接口返回的数据实体类：./entity/Photo.
+- 结合RaJava的使用，修改接口的返回类型，如：
+```
+ @GET("photos")
+Observable<Photo> getPhoto(@Query("consumer_key") String consumer_key, @Query("feature") String feature);
+```
+- 注意修改retrofit
+```
+ retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+```
+
+- 最后修改Presenter的方法
+```
+ @Override
+    public void loadPhotoData() {
+        A500PxApi.getInstance().getPhotoPopular()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Photo>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        view.loadPhotoDataFailure();
+                    }
+
+                    @Override
+                    public void onNext(Photo photo) {
+                        List<Photo.PhotosBean> photos = photo.getPhotos();
+                        view.loadPhotoDataSuccess("https://500px.com"+photos.get(0).getUrl());
+                        Logger.d(photos.get(0).getImage_url());
+                    }
+                });
+    }
 ```
 
 

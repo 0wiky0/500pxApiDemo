@@ -2,16 +2,20 @@ package com.wiky.a500pxapidemo.view;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.orhanobut.logger.Logger;
 import com.wiky.a500pxapidemo.R;
 import com.wiky.a500pxapidemo.presenter.IMainViewPresenter;
 import com.wiky.a500pxapidemo.presenter.MainViewPresenter;
 
-public class MainActivity extends AppCompatActivity implements IMainView{
+public class MainActivity extends AppCompatActivity implements IMainView {
 
-    private TextView text;
+    private ImageView imageView;
     private IMainViewPresenter presenter;
 
     @Override
@@ -20,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements IMainView{
         setContentView(R.layout.activity_main);
         Logger.init("Wiky");
 
-        text = (TextView) findViewById(R.id.txt_result);
+        imageView = (ImageView) findViewById(R.id.imageView);
 
         presenter = new MainViewPresenter(this);
         presenter.loadPhotoData();
@@ -28,11 +32,10 @@ public class MainActivity extends AppCompatActivity implements IMainView{
 
     @Override
     public void loadPhotoDataSuccess(String resultStr) {
-        text.setText(resultStr);
+        Glide.with(this).load(resultStr).asBitmap().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(imageView);
     }
 
     @Override
     public void loadPhotoDataFailure() {
-        text.setText("获取失败");
     }
 }
