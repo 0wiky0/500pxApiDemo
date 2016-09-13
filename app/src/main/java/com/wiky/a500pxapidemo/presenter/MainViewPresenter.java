@@ -40,7 +40,7 @@ public class MainViewPresenter implements IMainViewPresenter {
                     @Override
                     public void onNext(Photo photo) {
                         List<Photo.PhotosBean> photos = photo.getPhotos();
-                        view.loadPhotoDataSuccess("https://500px.com"+photos.get(0).getUrl());
+                        view.loadPhotoDataSuccess(photos.get(0).getImage_url());
                         Logger.d(photos.get(0).getImage_url());
                     }
                 });

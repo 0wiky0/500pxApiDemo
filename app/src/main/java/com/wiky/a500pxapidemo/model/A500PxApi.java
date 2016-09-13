@@ -21,7 +21,7 @@ public class A500PxApi {
      * https://github.com/500px/api-documentation/blob/master/endpoints/photo/GET_photos.md
      */
     public Observable<Photo> getPhotoPopular() {
-        return i500PxService.getPhoto(CONSUMER_KEY, "popular",1);
+        return i500PxService.getPhoto(CONSUMER_KEY, "popular",1,"6,4");
     }
 
     //单例

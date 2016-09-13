@@ -63,5 +63,5 @@ public interface I500PxService {
      * @return
      */
     @GET("photos")
-    Observable<Photo> getPhoto(@Query("consumer_key") String consumer_key, @Query("feature") String feature, @Query("rpp") String rpp, @Query("image_size") String image_size);
+    Observable<Photo> getPhoto(@Query("consumer_key") String consumer_key, @Query("feature") String feature, @Query("rpp") int rpp, @Query("image_size") String image_size);
 }
