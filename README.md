@@ -154,7 +154,7 @@ Observable<Photo> getPhoto(@Query("consumer_key") String consumer_key, @Query("f
 ```
 
 # 使用三：结合Glide处理展示效果（截图）
-![image](https://github.com/0wiky0/500pxApiDemo/screenshots/1.jpg)
+![image](https://github.com/0wiky0/500pxApiDemo/blob/develop/screenshot/1.png)
 
   [1]: http://www.tinmegali.com/en/model-view-presenter-android-part-1/
   [2]: https://github.com/500px/api-documentation/blob/master/endpoints/photo/GET_photos.md
